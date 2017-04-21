@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/sirSlani/EmperorBot/issues"
   },
-  "homepage": "https://github.com/sirSlani/EmperorBot#readme"
+  "homepage": "https://github.com/sirSlani/EmperorBot#readme",
+  "dependencies": {
+    "discord.js": "^11.0.0"
+  }
 }
