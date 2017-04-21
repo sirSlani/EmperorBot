@@ -29,4 +29,4 @@ client.on('message', (message) => {
 
 });
 
-client.login(settings.discord-token);
+client.login(settings.discordToken);
