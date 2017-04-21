@@ -1,0 +1,23 @@
+{
+  "name": "emperor-bot",
+  "version": "0.0.1",
+  "description": "The Emperor's official Discord bot.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sirSlani/EmperorBot.git"
+  },
+  "keywords": [
+    "discord",
+    "bot"
+  ],
+  "author": "Matija Maric",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sirSlani/EmperorBot/issues"
+  },
+  "homepage": "https://github.com/sirSlani/EmperorBot#readme"
+}
