@@ -1,3 +1,4 @@
 {
-  "discordToken": "DISCORD_TOKEN"
+  "discordToken": "DISCORD_TOKEN",
+  "prefix": "$"
 }
