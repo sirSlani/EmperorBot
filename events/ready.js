@@ -1,3 +1,3 @@
 module.exports = (client) => {
-    console.log('Bot ready');
+    console.log(`EmperorBot started at ${new Date()}.`);
 }
