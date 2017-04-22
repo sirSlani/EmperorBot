@@ -1,4 +1,5 @@
 {
   "discordToken": "DISCORD_TOKEN",
-  "prefix": "$"
+  "prefix": "$",
+  "ownedId": "LMAO"
 }

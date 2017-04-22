@@ -1,3 +1,3 @@
-module.exports.run = (client) => {
+module.exports = (client) => {
   console.log(`Reconnecting at ${new Date()}.`)
 }
