@@ -9,6 +9,10 @@ const client = new Commando.Client({
   owner: settings.ownerId
 });
 
+client.setProvider(
+  sqlite.open(path.join(__dirname, 'settings.sqlite3')).then((db) => new CommandoSQLiteProvider(db))
+).catch(console.err);
+
 client.registry
   .registerGroups([
     ['general', 'General commands']
@@ -16,14 +20,8 @@ client.registry
   .registerDefaults()
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
-client.setProvider(
-  sqlite.open(path.join(__dirname, 'settings.sqlite3')).then((db) => new CommandoSQLiteProvider(db))
-).catch(console.err);
-
 require('./util/eventLoader')(client);
 
 client.dota = Dota2Api.create(settings.dotaToken);
-
-//require('./util/eventLoader')(client);
 
 client.login(settings.discordToken);
