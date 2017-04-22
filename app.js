@@ -1,57 +1,29 @@
 const Discord = require('discord.js');
+const Commando = require('discord.js-commando');
 const settings = require('./settings.json');
-const fs = require('fs');
-const moment = require('moment');
+const path = require('path');
+const Dota2Api = require('dota2-api');
+const sqlite = require('sqlite');
 
-const client = new Discord.Client();
+const client = new Commando.Client({
+  owner: settings.ownerId
+});
+
+client.registry
+  .registerGroups([
+    ['general', 'General commands']
+  ])
+  .registerDefaults()
+  .registerCommandsIn(path.join(__dirname, 'commands'));
+
+client.setProvider(
+  sqlite.open(path.join(__dirname, 'settings.sqlite3')).then((db) => new CommandoSQLiteProvider(db))
+).catch(console.err);
 
 require('./util/eventLoader')(client);
 
-const log = (message) => {
-  console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${message}`);
-};
+client.dota = Dota2Api.create(settings.dotaToken);
 
-client.commands = new Discord.Collection();
-client.aliases = new Discord.Collection();
-fs.readdir('./commands/', (err, files) => {
-  if (err) console.error(err);
-  log(`Loading ${files.length} commands.`);
-  files.forEach(f => {
-    let props = require(`./commands/${f}`);
-    log(`Loading command: ${props.help.name}`);
-    client.commands.set(props.help.name, props);
-    props.conf.aliases.forEach((alias) => {
-      client.aliases.set(alias, props.help.name);
-    })
-  })
-});
-
-client.elevation = (message) => {
-  let permLvl = 0;
-  if (message.author.id == settings.ownerId) permLvl = 4;
-  return permLvl;
-}
-
-client.reload = (command) => {
-  return new Promise((resolve, reject) => {
-    try {
-      delete require.cache[require.resolve(`./commands/${command}`)];
-      let cmd = require(`./commands/${command}`);
-      client.commands.delete(command);
-      client.aliases.forEach((cmd, alias) => {
-        if (cmd == command) {
-          client.aliases.delete(alias);
-        }
-      });
-      client.commands.set(command, cmd);
-      cmd.conf.aliases.forEach((alias) => {
-        client.aliases.set(alias, cmd.help.name);
-      });
-      resolve();
-    } catch(err) {
-      reject(err);
-    }
-  })
-}
+//require('./util/eventLoader')(client);
 
 client.login(settings.discordToken);

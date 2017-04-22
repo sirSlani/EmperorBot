@@ -1,5 +1,6 @@
 {
   "discordToken": "DISCORD_TOKEN",
   "prefix": "$",
-  "ownedId": "LMAO"
+  "ownerId": "LMAO",
+  "dotaToken": "DOTA_TOKEN"
 }
