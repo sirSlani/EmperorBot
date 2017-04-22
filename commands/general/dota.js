@@ -9,12 +9,19 @@ module.exports = class DotaCommand extends Commando.Command {
       memberName: 'dota',
       description: 'Dota',
       details: "dota haha",
-      examples: ['dota -m 66630044'],
+      examples: ['dota'],
       args: [
         {
-          key: 'match-id',
+          key: 'matchId',
           label: 'm',
-          prompt: 'Match id',
+          prompt: 'Match ID',
+          type: 'string',
+          infinite: false
+        },
+        {
+          key: 'playerId',
+          label: 'p',
+          prompt: 'Player ID',
           type: 'string',
           infinite: false
         }
@@ -23,7 +30,8 @@ module.exports = class DotaCommand extends Commando.Command {
 
   }
 
-  async run(msg, args) {
-    return msg.reply("puši kurac");
+  async run(message, args) {
+    console.log(args);
+    return message.channel.sendMessage("puši kurac");
   }
 }

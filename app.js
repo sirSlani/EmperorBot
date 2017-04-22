@@ -10,12 +10,13 @@ const client = new Commando.Client({
 });
 
 client.setProvider(
-  sqlite.open(path.join(__dirname, 'settings.sqlite3')).then((db) => new CommandoSQLiteProvider(db))
+  sqlite.open(path.join(__dirname, 'settings.sqlite3')).then((db) => new Commando.SQLiteProvider(db))
 ).catch(console.err);
 
 client.registry
   .registerGroups([
-    ['general', 'General commands']
+    ['general', 'General commands'],
+    ['settings', 'Settings commands']
   ])
   .registerDefaults()
   .registerCommandsIn(path.join(__dirname, 'commands'));
