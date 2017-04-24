@@ -6,8 +6,13 @@ module.exports = {
 
       request(apiUrl, (err, result) => {
         var data = JSON.parse(result.body);
-        data = data[0];
-        callback(data);
+        if (data.length > 0) {
+          data = data[0];
+          callback(data);
+        } else {
+          callback({status: "error"})
+        }
+
       });
   },
   getPlayerData: (account_id, callback) => {
