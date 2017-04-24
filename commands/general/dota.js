@@ -27,39 +27,49 @@ module.exports = class DotaCommand extends Commando.Command {
       string: ['player']
     });
 
+    var player;
+
     if (!params.player) {
-      db.get("SELECT userId, steamId FROM steam WHERE userId='?'", message.author.id, (err, row) => {
+      var van = null;
+      db.get("SELECT userId, steamId FROM steam WHERE userId=?", message.author.id, (err, row) => {
         console.log(row);
-        if (row === undefined) {
-          return message.channel.sendCode('asciicode', "No stored Steam link");
-        } else {
-          params.player = row.steamId;
+        if (row !== undefined) {
+          player = row.steamId;
         }
-      })
-
-    } else {
-      DotaApi.searchByName(params.player, (steam) => {
-        DotaApi.getPlayerData(steam.account_id, (player) => {
-          if (params.remember) {
-            db.get("SELECT userId, steamId FROM steam WHERE userId='?'", message.author.id, (err, row) => {
-              if (row === undefined) {
-                db.run('INSERT INTO steam (userId, steamId) VALUES (?, ?)', [message.author.id, player.profile.personaname]);
-              }
-            });
-          }
-
-          const embed = new Discord.RichEmbed()
-            .setTitle(player.profile.personaname)
-            .setThumbnail(player.profile.avatarfull)
-            .addField('Steam profile: ', player.profile.profileurl)
-            .addField('DotaBuff profile: ', `https://www.dotabuff.com/players/${player.profile.account_id}`)
-            .addField('Solo MMR: ', player.solo_competitive_rank, true)
-            .addField('Party MMR: ', player.competitive_rank, true);
-
-          return message.channel.sendEmbed(embed);
-        });
       });
+
+      if (!player) {
+        return message.channel.sendCode('asciicode', "No stored Steam link.");
+      }
+    } else {
+      player = params.player;
     }
+
+    console.log(player);
+
+    DotaApi.searchByName(player, (steam) => {
+      DotaApi.getPlayerData(steam.account_id, (player) => {
+        if (params.remember) {
+          db.get("SELECT userId, steamId FROM steam WHERE userId=?", message.author.id, (err, row) => {
+            if (row === undefined) {
+              db.run('INSERT INTO steam (userId, steamId) VALUES (?, ?)', [message.author.id, player.profile.personaname]);
+            } else {
+              db.run('UPDATE steam SET steamId=? WHERE userId=?', [player.profile.personaname, message.author.id]);
+            }
+          });
+        }
+
+        const embed = new Discord.RichEmbed()
+          .setTitle(player.profile.personaname)
+          .setThumbnail(player.profile.avatarfull)
+          .addField('Steam profile: ', player.profile.profileurl)
+          .addField('DotaBuff profile: ', `https://www.dotabuff.com/players/${player.profile.account_id}`)
+          .addField('Solo MMR: ', player.solo_competitive_rank, true)
+          .addField('Party MMR: ', player.competitive_rank, true);
+
+        return message.channel.sendEmbed(embed);
+      });
+    });
 
   }
 }
