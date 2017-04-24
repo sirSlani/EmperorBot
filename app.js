@@ -2,8 +2,8 @@ const Discord = require('discord.js');
 const Commando = require('discord.js-commando');
 const settings = require('./settings.json');
 const path = require('path');
-const Dota2Api = require('dota2-api');
 const sqlite = require('sqlite');
+const sqlite3 = require('sqlite3').verbose();
 
 const client = new Commando.Client({
   owner: settings.ownerId
@@ -23,6 +23,8 @@ client.registry
 
 require('./util/eventLoader')(client);
 
-client.dota = Dota2Api.create(settings.dotaToken);
-
-client.login(settings.discordToken);
+client.login(settings.discordToken).then(() => {
+  client.database = new sqlite3.Database('./data.sqlite3');
+  var db = client.database;
+  db.run('CREATE TABLE IF NOT EXISTS steam (userId TEXT, steamId TEXT)');
+});
