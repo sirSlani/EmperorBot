@@ -4,6 +4,7 @@ const settings = require('./settings.json');
 const path = require('path');
 const sqlite = require('sqlite');
 const sqlite3 = require('sqlite3').verbose();
+const DotaApi = require('./open-dota-api/dota-api');
 
 const client = new Commando.Client({
   owner: settings.ownerId
@@ -22,6 +23,10 @@ client.registry
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
 require('./util/eventLoader')(client);
+
+DotaApi.getHeroes((heroes) => {
+  client.heroes = heroes;
+});
 
 client.login(settings.discordToken).then(() => {
   client.database = new sqlite3.Database('./data.sqlite3');

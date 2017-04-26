@@ -22,5 +22,21 @@ module.exports = {
       var data = JSON.parse(result.body);
       callback(data);
     })
+  },
+  getRecentMatches: (account_id, callback) => {
+    var apiUrl = `https://api.opendota.com/api/players/${account_id}/recentMatches`;
+
+    request(apiUrl, (err, result) => {
+      var data = JSON.parse(result.body);
+      callback(data);
+    })
+  },
+  getHeroes: (callback) => {
+    var apiUrl = "https://api.opendota.com/api/heroes";
+
+    request(apiUrl, (err, result) => {
+      var data = JSON.parse(result.body);
+      callback(data);
+    });
   }
 }
